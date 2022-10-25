@@ -3,7 +3,7 @@
 ## Options
 ```json
 {
-  "projectName" : "tanzu-java-web-app133",
+  "projectName" : "tanzu-java-web-app135",
   "repositoryPrefix" : "harbor.lab.tw"
 }
 ```
