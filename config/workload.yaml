@@ -3,16 +3,25 @@ kind: Workload
 metadata:
   name: tanzu-java-web-app135
   labels:
-    apps.tanzu.vmware.com/workload-type: web
+    apps.tanzu.vmware.com/workload-type: server
     app.kubernetes.io/part-of: tanzu-java-web-app135
+    apps.tanzu.vmware.com/has-tests: true 
 spec:
+  build:
+    env: 
+      name: BP_MAVEN_BUILD_ARGUMENTS
+      value: -Dmaven.test.skip=true -Dmaven.wagon.http.ssl.insecure=true -Dmaven.wagon.http.ssl.allowall=true -Dmaven.wagon.http.ssl.ignore.validity.dates=true --no-transfer-progress package
   params:
-  - name: annotations
-    value:
-      autoscaling.knative.dev/minScale: "1"
+  - name: buildServiceBindings
+    value: 
+      - name: settings-xml
+        kind: Secret
+        apiVersion: v1
+    name: gitops_ssh_secret
+    value: https-ca-credentials
   source:
     git:
       ref:
         branch: main
-      url: https://github.com/timwangwmw/tanzu-java-web-app135.git
+      url: https://github.com/timwangwmw/tamvn wrapper:wrappernzu-java-web-app135.git
     # subPath: tanzu-java-web-app135
