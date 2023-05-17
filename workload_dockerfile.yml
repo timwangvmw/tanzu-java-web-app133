@@ -1,0 +1,36 @@
+apiVersion: carto.run/v1alpha1
+kind: Workload
+metadata:
+  labels:
+    app.kubernetes.io/part-of: tanzu-java-web-app-kaniko
+    apps.tanzu.vmware.com/act-tests: "true"
+    apps.tanzu.vmware.com/has-tests: "true"
+    apps.tanzu.vmware.com/workload-type: server
+  name: tanzu-java-web-app-kaniko
+  namespace: tap-sit
+spec:
+  env:
+  - name: JAVA_TOOL_OPTIONS
+    value: "-javaagent:/var/tmp/elastic-apm-agent-1.38.1-20230512.153148-12.jar -Delastic.apm.service_name=my-cool-service -Delastic.apm.application_packages=org.example,org.another.example -Delastic.apm.server_url=http://127.0.0.1:8200"
+  params:
+  - name: dockerfile 
+    value: ./Dockerfile
+  - name: buildServiceBindings
+    value:
+    - kind: Secret
+      name: elastic-apm
+  - name: scanning_source_policy
+    value: scan-policy
+  - name: actest-namespace
+    value: tap-delivery
+  - name: testing_pipeline_matching_labels
+    value:
+      apps.tanzu.vmware.com/pipeline: vmware-approvaltask
+  - name: integration_testing_matching_labels
+    value:
+      apps.tanzu.vmware.com/pipeline: int-test
+  source:
+    git:
+      ref:
+        branch: dev
+      url: https://github.com/timwangvmw/tanzu-java-web-app133.git

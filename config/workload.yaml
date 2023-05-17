@@ -1,28 +1,40 @@
 apiVersion: carto.run/v1alpha1
 kind: Workload
 metadata:
-  name: tanzu-java-web-app135
+  name: tanzu-java-web-app-live
   namespace: tap-tim
   labels:
-    apps.tanzu.vmware.com/workload-type: server
-    app.kubernetes.io/part-of: tanzu-java-web-app135
+    apps.tanzu.vmware.com/workload-type: web
+    app.kubernetes.io/part-of: tanzu-java-web-app-live
     apps.tanzu.vmware.com/has-tests: true 
 spec:
-  build:
-    env: 
-      name: BP_MAVEN_BUILD_ARGUMENTS
-      value: -Dmaven.test.skip=true -Dmaven.wagon.http.ssl.insecure=true -Dmaven.wagon.http.ssl.allowall=true -Dmaven.wagon.http.ssl.ignore.validity.dates=true --no-transfer-progress package
   params:
-  - name: buildServiceBindings
-    value: 
-      - name: settings-xml
-        kind: Secret
-        apiVersion: v1
-    name: gitops_ssh_secret
-    value: https-ca-credentials
-  source:
-    git:
-      ref:
-        branch: main
-      url: https://github.com/timwangwmw/tamvn wrapper:wrappernzu-java-web-app135.git
+  - name: registry
+    value:
+      repository: tim
+      server: harbor.lab.tw
+  - name: gitops_ssh_secret
+    value: github-workload-token
+  - name: testing_pipeline_matching_labels
+    value:
+      apps.tanzu.vmware.com/pipeline: vmware
+  - name: ingress
+    value:
+      apiVersion: projectcontour.io/v1
+      kind: HTTPProxy
+      metadata:
+        name: tanzu-java-web-app
+        namespace: tap-dev
+      spec:
+        routes:
+        - conditions:
+          - {}
+          services:
+          - name: tanzu-java-web-app
+            port: 8080
+        virtualhost:
+          fqdn: tanzu-java-web-app.tim-tap-140.pso.lab
+          tls:
+            secretName: workloads/tap-ca-secret
+  serviceAccountName: workload-sa
     # subPath: tanzu-java-web-app135
