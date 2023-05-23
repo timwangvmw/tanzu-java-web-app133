@@ -3,17 +3,28 @@ apiVersion: carto.run/v1alpha1
 kind: Workload
 metadata:
   labels:
-    app.kubernetes.io/part-of: tanzu-java-web-app-tim
+    app.kubernetes.io/part-of: tanzu-java-web-app
+    apps.tanzu.vmware.com/act-tests: "true"
     apps.tanzu.vmware.com/has-tests: "true"
     apps.tanzu.vmware.com/workload-type: server
-  name: tanzu-java-web-app-tim
-  namespace: tap-tim
+  name: tanzu-java-web-app
+  namespace: tap-sit
 spec:
+  build:
+    env:
+    - name: BP_JVM_VERSION
+      value: "17"
   params:
-  - name: registry
+  - name: scanning_source_policy
+    value: scan-policy
+  - name: actest-namespace
+    value: tap-delivery
+  - name: testing_pipeline_matching_labels
     value:
-      repository: tim
-      server: harbor.lab.tw
+      apps.tanzu.vmware.com/pipeline: vmware-approvaltask
+  - name: integration_testing_matching_labels
+    value:
+      apps.tanzu.vmware.com/pipeline: int-test
   source:
     git:
       ref:
