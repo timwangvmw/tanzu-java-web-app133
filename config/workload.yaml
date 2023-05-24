@@ -2,39 +2,41 @@ apiVersion: carto.run/v1alpha1
 kind: Workload
 metadata:
   name: tanzu-java-web-app-live
-  namespace: tap-tim
+  namespace: tap-sit
   labels:
     apps.tanzu.vmware.com/workload-type: web
     app.kubernetes.io/part-of: tanzu-java-web-app-live
-    apps.tanzu.vmware.com/has-tests: true 
 spec:
-  params:
-  - name: registry
-    value:
-      repository: tim
-      server: harbor.lab.tw
-  - name: gitops_ssh_secret
-    value: github-workload-token
-  - name: testing_pipeline_matching_labels
-    value:
-      apps.tanzu.vmware.com/pipeline: vmware
-  - name: ingress
-    value:
-      apiVersion: projectcontour.io/v1
-      kind: HTTPProxy
-      metadata:
-        name: tanzu-java-web-app
-        namespace: tap-dev
-      spec:
-        routes:
-        - conditions:
-          - {}
-          services:
-          - name: tanzu-java-web-app
-            port: 8080
-        virtualhost:
-          fqdn: tanzu-java-web-app.tim-tap-140.pso.lab
-          tls:
-            secretName: workloads/tap-ca-secret
-  serviceAccountName: workload-sa
+  build:
+    env:
+    - name: BP_JVM_VERSION
+      value: "17"
+  # - name: registry
+  #   value:
+  #     repository: tim
+  #     server: harbor.lab.tw
+  # - name: gitops_ssh_secret
+  #   value: github-workload-token
+  # - name: testing_pipeline_matching_labels
+  #   value:
+  #     apps.tanzu.vmware.com/pipeline: vmware
+  # - name: ingress
+  #   value:
+  #     apiVersion: projectcontour.io/v1
+  #     kind: HTTPProxy
+  #     metadata:
+  #       name: tanzu-java-web-app
+  #       namespace: tap-dev
+  #     spec:
+  #       routes:
+  #       - conditions:
+  #         - {}
+  #         services:
+  #         - name: tanzu-java-web-app
+  #           port: 8080
+  #       virtualhost:
+  #         fqdn: tanzu-java-web-app.tim-tap-140.pso.lab
+  #         tls:
+  # #           secretName: workloads/tap-ca-secret
+  # serviceAccountName: workload-sa
     # subPath: tanzu-java-web-app135
