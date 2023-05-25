@@ -1,6 +1,6 @@
 ARG BUILDER_IMAGE=maven
 # ARG RUNTIME_IMAGE=gcr.io/distroless/java17-debian11
-ARG RUNTIME_IMAGE=openjdk
+ARG RUNTIME_IMAGE=openjdk:17.0.2-jdk
 FROM $BUILDER_IMAGE AS build
 ADD . .
 RUN unset MAVEN_CONFIG && ./mvnw clean package -B -DskipTests
