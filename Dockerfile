@@ -7,7 +7,7 @@ RUN unset MAVEN_CONFIG && ./mvnw clean package -B -DskipTests
 FROM $RUNTIME_IMAGE AS runtime
 # USER 1000
 # WORKDIR /app
-COPY --from=build /target/demo-0.0.1-SNAPSHOT.jar demo.jar
+COPY --from=build /target/demo-0.0.1-SNAPSHOT.jar /demo.jar
 # USER root
 # RUN chmod -R 755 /app
 # USER 1000
