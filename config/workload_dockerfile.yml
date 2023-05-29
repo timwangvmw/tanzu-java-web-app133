@@ -15,10 +15,10 @@ spec:
   params:
   - name: dockerfile 
     value: ./Dockerfile
-  - name: buildServiceBindings
-    value:
-    - kind: Secret
-      name: elastic-apm
+  # - name: buildServiceBindings
+  #   value:
+  #   - kind: Secret
+  #     name: elastic-apm
   - name: scanning_source_policy
     value: scan-policy
   - name: actest-namespace
